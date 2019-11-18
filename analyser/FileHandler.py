@@ -34,3 +34,5 @@ def upload_file():
 
 
 @app.route('/get-config/<client>')
+def get_config(client):
+    return
