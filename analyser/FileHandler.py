@@ -1,9 +1,11 @@
 import os
-from flask import Flask, flash, request, redirect, url_for
+from flask import Flask, flash, request, redirect, url_for, abort, send_file, render_template
 from werkzeug.utils import secure_filename
 
 UPLOAD_FOLDER = './uploads/'
-ALLOWED_EXTENSIONS = {'txt', 'log'}
+ALLOWED_EXTENSIONS = ['txt', 'log']
+CLIENTS = {'client1': 'conf1.cfg', 
+           'client2': 'blacklist.cfg'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -35,4 +37,8 @@ def upload_file():
 
 @app.route('/get-config/<client>')
 def get_config(client):
-    return
+    if client not in CLIENTS:
+        return 404
+    else:
+        filename = 'config\\' + CLIENTS[client]
+        return send_file(filename, mimetype='text/plain')
