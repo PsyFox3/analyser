@@ -4,16 +4,12 @@ from werkzeug.utils import secure_filename
 from flask_restful import Resource, reqparse
 
 UPLOAD_FOLDER = './uploads/'
-ALLOWED_EXTENSIONS = ['txt', 'log']
+ALLOWED_EXTENSIONS = ['txt', 'log'] # TODO: make central place for config
 CLIENTS = {'client1': 'conf1.cfg', 
            'client2': 'blacklist.cfg'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-def allowed_file(self, filename):
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 class upload(Resource):
     def allowed_file(self, filename):
@@ -31,7 +27,7 @@ class upload(Resource):
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
-        if file and allowed_file(file.filename):
+        if file and self.allowed_file(str(file.filename)):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return {'message': 'uploaded_file'}, 302
