@@ -11,7 +11,11 @@ CLIENTS = {'client1': 'conf1.cfg',
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-class upload(Resource):
+
+class Upload(Resource):
+    def __init__(self):
+        pass
+
     def allowed_file(self, filename):
         return '.' in filename and \
             filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -32,7 +36,11 @@ class upload(Resource):
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return {'message': 'uploaded_file'}, 302
 
-class get_config(Resource):
+
+class GetConfig(Resource):
+    def __init__(self):
+        pass
+
     def get_config(self, client):
         if client not in CLIENTS:
             return 404
