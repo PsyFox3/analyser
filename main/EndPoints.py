@@ -1,12 +1,12 @@
 import os
-from flask import Flask, flash, request, redirect, url_for, abort, send_file, render_template
+from flask import Flask, flash, request, redirect, send_file
 from werkzeug.utils import secure_filename
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 
 UPLOAD_FOLDER = './uploads/'
 ALLOWED_EXTENSIONS = ['txt', 'log'] # TODO: make central place for config
-CLIENTS = {'client1': 'conf1.cfg', 
-           'client2': 'blacklist.cfg'}
+CLIENTS = {'client1': 'conf1.ini',
+           'client2': 'blacklist.ini'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -14,9 +14,10 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 class Upload(Resource):
     def __init__(self):
-        pass
+        self.filename = Resource
 
-    def allowed_file(self, filename):
+    @staticmethod
+    def allowed_file(filename):
         return '.' in filename and \
             filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -39,9 +40,11 @@ class Upload(Resource):
 
 class GetConfig(Resource):
     def __init__(self):
+        self.client = Resource
         pass
 
-    def get_config(self, client):
+    @staticmethod
+    def get_config(client):
         if client not in CLIENTS:
             return 404
         else:
