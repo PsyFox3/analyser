@@ -2,7 +2,9 @@ import os
 import configparser
 import json
 
+# Public config variable
 config = None
+
 
 class AnaSetup:
     def __init__(self, config_file):
@@ -39,6 +41,8 @@ class Analyser:
             split_name = file['file_name'].split('.')
             if split_name[1] is '.dll':
                 self.file_score += self.risk_scores['IsDLL']
+            if split_name[1] is '.exe':
+                self.file_score += self.risk_scores['IsEXE']
             if file['location'] in self.system_locations:
                 self.file_score += self.risk_scores['IsSystemFile']
             else:
@@ -50,7 +54,7 @@ class Analyser:
 
         return self.results
 
-    def analyse_process(self):
+    def analyse_process(self, blacklist, whitelist):
         while True:
             file_process = NewFileProcess().check_new_file()
 
@@ -60,11 +64,10 @@ class Analyser:
                 for result in results:
                     if result[1] >= self.__config['DEFAULT']['RiskThreshold']:
                         # Add to blacklist
-                        pass
+                        blacklist.write(result)
                     if result[1] == 0:
                         # Add to whitelist
-                        pass
-
+                        whitelist.write(result)
 
 
 class AnaCleanUp:

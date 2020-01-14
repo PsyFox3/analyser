@@ -21,11 +21,11 @@ context.signal_map = {
 }
 
 config_file = open('./config/config.ini', 'w')
-main_blacklist = open('./lists/blacklist/blacklist.ini', 'w')
-main_whitelist = open('./lists/whitelist/whitelist.ini', 'w')
+main_blacklist = open('./lists/blacklist/blacklist.ini', 'a')
+main_whitelist = open('./lists/whitelist/whitelist.ini', 'a')
 context.files_preserve = [config_file, main_blacklist, main_whitelist]
 
 AnaSetup(config_file)
 
 with context:
-    Analyser()
+    Analyser().analyse_process(main_blacklist, main_whitelist)

@@ -21,7 +21,7 @@ class Upload(Resource):
         return '.' in filename and \
             filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-    def upload(self):
+    def post(self):
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
@@ -33,7 +33,7 @@ class Upload(Resource):
             flash('No selected file')
             return redirect(request.url)
         if file and self.allowed_file(str(file.filename)):
-            filename = secure_filename(file.filename)
+            filename = 'clientLog.json'
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return {'message': 'uploaded_file'}, 302
 
@@ -41,10 +41,9 @@ class Upload(Resource):
 class GetConfig(Resource):
     def __init__(self):
         self.client = Resource
-        pass
 
     @staticmethod
-    def get_config(client):
+    def get(client):
         if client not in CLIENTS:
             return 404
         else:
